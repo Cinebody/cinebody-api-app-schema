@@ -1,0 +1,327 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Cinebody API",
+    "version" : "2.0.0-oas3"
+  },
+  "servers" : [ {
+    "url" : "https://app-api.cinebody.com/"
+  } ],
+  "security" : [ {
+    "APIKey" : [ ]
+  } ],
+  "paths" : {
+    "/app/3.0/organizations" : {
+      "get" : {
+        "tags" : [ "Organizations" ],
+        "summary" : "Get organizations this app has access to",
+        "responses" : {
+          "200" : {
+            "description" : "invite",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "user not logged in",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "406" : {
+            "description" : "missing parameters",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app/3.0/organizations/{organizationId}" : {
+      "get" : {
+        "tags" : [ "Organizations" ],
+        "summary" : "Get a single organization",
+        "parameters" : [ {
+          "name" : "organizationId",
+          "in" : "path",
+          "description" : "The organization to fetch",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "invite",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "user not logged in",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "406" : {
+            "description" : "missing parameters",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Organization" : {
+        "required" : [ "id", "name", "status" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Lumenati"
+          },
+          "status" : {
+            "type" : "string",
+            "example" : "active",
+            "enum" : [ "active", "freeTrialExpired", "delinquent", "inactive" ]
+          },
+          "storageStatus" : {
+            "type" : "string",
+            "description" : "Storage Status:\n * `compliant` - The organization is in compliance with storage limits\n * `grace` - The organization is over their storage limit and using their grace storage\n * `locked` - The organization is over their storage limit and grace storage. Uploads are no longer possible\n",
+            "example" : "compliant",
+            "enum" : [ "compliant", "grace", "locked" ]
+          },
+          "addressName" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "addressLine1" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "addressLine2" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "addressCity" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "addressState" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "addressZip" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "addressCountry" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "profileImages" : {
+            "$ref" : "#/components/schemas/Organization_profileImages"
+          },
+          "heroImages" : {
+            "$ref" : "#/components/schemas/Organization_heroImages"
+          },
+          "isBilledOffline" : {
+            "type" : "boolean",
+            "description" : "Whether the organization is billed offline via manual invoice",
+            "example" : false
+          },
+          "lockedClipsAt" : {
+            "type" : "string",
+            "description" : "If the organization has exceeded storage limits or let the subscription lapse, clips may be locked",
+            "nullable" : true
+          },
+          "endFreeTrialAt" : {
+            "type" : "string",
+            "description" : "When the free trial will end. This value might be in the past.",
+            "example" : "2021-07-29T01:42:13.456Z"
+          },
+          "shouldAutoUpgrade" : {
+            "type" : "boolean",
+            "description" : "Whether storage add-ons will be automatically added to the subscription when storage limits are exceeded."
+          },
+          "isLocked" : {
+            "type" : "boolean",
+            "description" : "The organization is locked out because of a subscription status issue",
+            "example" : false
+          }
+        }
+      },
+      "ErrorResponse" : {
+        "required" : [ "reason", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "description" : "Will be set to 'failure'"
+          },
+          "code" : {
+            "type" : "string",
+            "description" : "The error code. Use this code to identify the specific error. Will always be a string like ORGANIZATION_NOT_FOUND."
+          },
+          "reason" : {
+            "type" : "string",
+            "description" : "An error description for developers"
+          },
+          "friendlyReason" : {
+            "type" : "string",
+            "description" : "An end-user friendly message"
+          }
+        }
+      },
+      "inline_response_200" : {
+        "type" : "object",
+        "properties" : {
+          "apiVersion" : {
+            "type" : "string",
+            "description" : "The current api version"
+          },
+          "organizations" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Organization"
+            }
+          }
+        }
+      },
+      "inline_response_200_1" : {
+        "type" : "object",
+        "properties" : {
+          "apiVersion" : {
+            "type" : "string",
+            "description" : "The current api version"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/Organization"
+          }
+        }
+      },
+      "Organization_profileImages" : {
+        "type" : "object",
+        "properties" : {
+          "profile80" : {
+            "type" : "string",
+            "description" : "URL of the profile image (80x80)",
+            "example" : "https://s3.amazonaws.com/cinebody/default-logos/L_80.jpg"
+          },
+          "profile80@2x" : {
+            "type" : "string",
+            "description" : "URL of the profile image (160x160) to be used @2x",
+            "example" : "https://s3.amazonaws.com/cinebody/default-logos/L_80@2x.jpg"
+          },
+          "profile150" : {
+            "type" : "string",
+            "description" : "URL of the profile image (150x150) to be used @2x",
+            "example" : "https://s3.amazonaws.com/cinebody/default-logos/L_150.jpg"
+          },
+          "profile150@2x" : {
+            "type" : "string",
+            "description" : "URL of the profile image (300x300) to be used @2x",
+            "example" : "https://s3.amazonaws.com/cinebody/default-logos/L_150@2x.jpg"
+          }
+        },
+        "description" : "The profile picture / icon of the organization"
+      },
+      "Organization_heroImages" : {
+        "type" : "object",
+        "properties" : {
+          "profile1200" : {
+            "type" : "string",
+            "description" : "URL of the hero image (1200x1200)",
+            "example" : "https://s3.amazonaws.com/cinebody/default-org-hero--X1200.jpg"
+          },
+          "profile1200@2x" : {
+            "type" : "string",
+            "description" : "URL of the hero image (2400x2400) to be used @2x",
+            "example" : "https://s3.amazonaws.com/cinebody/default-org-hero--X1200@2x.jpg\""
+          }
+        },
+        "description" : "A hero image that can be used as a banner"
+      }
+    },
+    "securitySchemes" : {
+      "APIKey" : {
+        "type" : "apiKey",
+        "name" : "x-api-key",
+        "in" : "header"
+      }
+    }
+  }
+}
