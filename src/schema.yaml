@@ -19,7 +19,7 @@ paths:
         - $ref: '#/components/parameters/page'
       responses:
         '200':
-          description: invite
+          description: Success
           content:
             application/json:
               schema:
@@ -44,7 +44,7 @@ paths:
     get:
       tags:
         - Organizations
-      summary: Get organization stats
+      summary: Get organization storage info
       parameters:
         - name: organizationId
           in: path
@@ -132,7 +132,7 @@ paths:
         - $ref: '#/components/parameters/organizationAttributes'
       responses:
         '200':
-          description: invite
+          description: Success
           content:
             application/json:
               schema:
@@ -226,7 +226,7 @@ paths:
                   example: true
       responses:
         '200':
-          description: invite
+          description: Success
           content:
             application/json:
               schema:
@@ -539,6 +539,88 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Projects
+      summary: Create a project
+      parameters:
+        - $ref: '#/components/parameters/projectAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - teamId
+                - title
+                - description
+                - orientation
+                - shootType
+                - type
+              properties:
+                teamId:
+                  type: string
+                  format: uuid
+                  description: The team to create the project under
+                joinCode:
+                  type: string
+                  description: A custom join code to use.
+                  example: lumi02
+                startAt:
+                  type: string
+                  description: The project start
+                  example: '2020-10-03T00:00:00.000Z'
+                endAt:
+                  type: string
+                  description: The project end
+                  example: '2021-11-30T07:00:00.000Z'
+                title:
+                  type: string
+                  description: The project title
+                  example: Cinebody around the globe
+                description:
+                  type: string
+                  description: The project description
+                  example: Get footage of Cinebody being used everywhere in the world!
+                orientation:
+                  $ref: '#/components/schemas/ProjectOrientation'
+                shootType:
+                  type: string
+                  description: Describes the theme of the project. Event, Micro-doc, Sports, etc.
+                type:
+                  $ref: '#/components/schemas/ProjectType'
+                incentive:
+                  type: string
+                  description: The project incentive
+                  example: Free t-shirt for selected creators
+                status:
+                  $ref: '#/components/schemas/ProjectStatus'
+                publishStatus:
+                  $ref: '#/components/schemas/ProjectPublishStatus'
+                isGeoVisible:
+                  type: boolean
+                  description: Can admins see clip geo
+                  example: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      project:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
   /app/3.0/projects/{projectId}:
     get:
       tags:
@@ -552,6 +634,83 @@ paths:
           schema:
             type: string
         - $ref: '#/components/parameters/projectAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      project:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags:
+        - Projects
+      summary: Update a project
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/projectAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                joinCode:
+                  type: string
+                  description: A custom join code to use.
+                  example: lumi02
+                startAt:
+                  type: string
+                  description: The project start
+                  example: '2020-10-03T00:00:00.000Z'
+                endAt:
+                  type: string
+                  description: The project end
+                  example: '2021-11-30T07:00:00.000Z'
+                title:
+                  type: string
+                  description: The project title
+                  example: Cinebody around the globe
+                description:
+                  type: string
+                  description: The project description
+                  example: Get footage of Cinebody being used everywhere in the world!
+                orientation:
+                  $ref: '#/components/schemas/ProjectOrientation'
+                shootType:
+                  type: string
+                  description: Describes the theme of the project. Event, Micro-doc, Sports, etc.
+                type:
+                  $ref: '#/components/schemas/ProjectType'
+                incentive:
+                  type: string
+                  description: The project incentive
+                  example: Free t-shirt for selected creators
+                status:
+                  $ref: '#/components/schemas/ProjectStatus'
+                publishStatus:
+                  $ref: '#/components/schemas/ProjectPublishStatus'
+                isGeoVisible:
+                  type: boolean
+                  description: Can admins see clip geo
+                  example: false
       responses:
         '200':
           description: Success
@@ -611,6 +770,101 @@ paths:
             required: true
             schema:
               type: string
+      responses:
+        '200':
+          description: Join code availability info
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      joinCode:
+                        type: string
+                        description: The join code that was checked
+                        example: lumen13
+                      isAvailable:
+                        type: boolean
+                        description: Whether the join code is available
+                        example: true
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/clips:
+    get:
+      tags:
+        - Videos
+      summary: Get project clips
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - name: sortOrder
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - name: shotIds
+          in: query
+          description: Limit result to specific shots
+          schema:
+            type: array
+            items:
+              type: string
+        - name: shotTypeIds
+          in: query
+          description: Limit result to specific shot types
+          schema:
+            type: array
+            items:
+              type: string
+        - name: userIds
+          in: query
+          description: Limit result to specific users
+          schema:
+            type: array
+            items:
+              type: string
+        - name: isEdit
+          in: query
+          description: Whether this video is a Final Video
+          schema:
+            type: boolean
+        - name: freeShoot
+          in: query
+          description: Include free-shoot videos
+          schema:
+            type: boolean
+        - name: favorite
+          in: query
+          description: Limit results to favorited videos. These are videos hearted in the Cinebody app by the filmer
+          schema:
+            type: boolean
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/MediaFileStatus'
+        - name: fps
+          in: query
+          description: Limit results to videos shot with a specific FPS
+          schema:
+            $ref: '#/components/schemas/MediaFileFps'
+        - name: quality
+          in: query
+          description: Limit results to videos shot with a specific video quality
+          schema:
+            $ref: '#/components/schemas/MediaFileQuality'
+        - $ref: '#/components/parameters/mediaFileAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
       responses:
         '200':
           description: Join code availability info
@@ -1047,6 +1301,100 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+  /app/3.0/mediaFiles/download:
+    get:
+      tags:
+        - Videos
+      summary: Get download urls for multiple videos by filename
+      parameters:
+        - name: teamId
+          required: true
+          in: query
+          description: The team id
+          schema:
+            type: string
+            format: uuid
+        - name: projectId
+          in: query
+          description: The project id
+          schema:
+            type: string
+            format: uuid
+        - name: filenames
+          required: true
+          in: query
+          description: The filenames to download. This should be and array of MediaFile fileUUID or fileUUIDSD
+          example: [502d06e7-0e2c-4278-be0b-c551a0903e77.mov, 8863362d-5646-44ec-8700-1b1ccbd0b26b-SD.mp4]
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      urls:
+                        type: array
+                        items:
+                          properties:
+                            signedUrl:
+                              type: string
+                              description: The signed download URL. This link will expire.
+                            filename:
+                              type: string
+                              description: The filename to use when saving the file
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/mediaFiles/{mediaFileId}/download:
+    get:
+      tags:
+        - Videos
+      summary: Download a specific media file by id.
+      parameters:
+        - name: mediaFileId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      url:
+                        type: string
+                        description: The signed download URL. This link will expire.
+                      filename:
+                        type: string
+                        description: The filename to use when saving the file
+
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
 components:
   schemas:
     Address:
@@ -1166,25 +1514,7 @@ components:
           description: The name of the team
           type:  string
         profileImages:
-          description: The team profile images
-          type: object
-          properties:
-            profile80:
-              type: string
-              description: URL of the profile image (80x80)
-              example: https://s3.amazonaws.com/cinebody/default-logos/L_80.jpg
-            profile80@2x:
-              type: string
-              description: URL of the profile image (160x160) to be used @2x
-              example: https://s3.amazonaws.com/cinebody/default-logos/L_80@2x.jpg
-            profile150:
-              type: string
-              description: URL of the profile image (150x150) to be used @2x
-              example: https://s3.amazonaws.com/cinebody/default-logos/L_150.jpg
-            profile150@2x:
-              type: string
-              description: URL of the profile image (300x300) to be used @2x
-              example: https://s3.amazonaws.com/cinebody/default-logos/L_150@2x.jpg
+          $ref: '#/components/schemas/TeamProfileImages'
         status:
           description: The current status of the team
           $ref: '#/components/schemas/TeamStatus'
@@ -1268,25 +1598,7 @@ components:
         onlineStatus:
           $ref: '#/components/schemas/UserOnlineStatus'
         profileImages:
-          type: object
-          description: The profile picture / icon of the organization
-          properties:
-            profile60:
-              type: string
-              description: URL of the profile image (60x60)
-              example: https://s3.amazonaws.com/cinebody-dev/default-profile--X60.jpg
-            profile60@2x:
-              type: string
-              description: URL of the profile image (120x120) to be used @2x
-              example: https://s3.amazonaws.com/cinebody-dev/default-profile--X60@2x.jpg
-            profile150:
-              type: string
-              description: URL of the profile image (150x150) to be used @2x
-              example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150.jpg
-            profile150@2x:
-              type: string
-              description: URL of the profile image (300x300) to be used @2x
-              example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150@2x.jpg
+          $ref: '#/components/schemas/UserProfileImages'
         userBio:
           type: string
           nullable: true
@@ -1408,7 +1720,7 @@ components:
           $ref: '#/components/schemas/ProjectOrientation'
         shootType:
           type:  string
-          description: DEPRECATED Describes the theme of the project. Event, Micro-doc, Sports, etc.
+          description: Describes the theme of the project. Event, Micro-doc, Sports, etc.
         defaultImageUrl:
           type:  string
           nullable: true
@@ -1543,7 +1855,176 @@ components:
           type:  boolean
           description: Is clip geo available to admins
           example: false
-
+    MediaFile:
+      description: A video file
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fileUUID:
+          type: string
+          description: The file id used to build the path for file download / playback
+        fileUUIDSD:
+          type: string
+          description: The file id used to build the path for the standard definition file download / playback
+        thumbnailUUID:
+          type: string
+          nullable: true
+          description: The file id used to build the path for thumbnails
+        contentType:
+          type: string
+          description: The MIME content type of the file
+        fileSize:
+          type:  number
+          description: The size of the original file in bytes
+        fileSizeSD:
+          type:  number
+          description: The size of the transcoded, standard definition file in bytes
+        thumbSize:
+          type:  number
+          description: The total size of thumbnail assets in bytes
+        lengthSeconds:
+          type: number
+          nullable: true
+          description: The video file length in seconds
+        description:
+          type: string
+          nullable: true
+          description: Description of the video
+        isEdit:
+          type: boolean
+          description: Whether this media file is an "edit"
+        transcoded:
+          type: boolean
+          description: Whether an SD version has been transcoded
+        transcodingError:
+          type: boolean
+          description: Whether there was an error transcoding the SD version
+        shotInCaseMode:
+          type: boolean
+          description: Legacy. Whether this was shot in a cinebody case
+        fps:
+          $ref: '#/components/schemas/MediaFileFps'
+          nullable: true
+        quality:
+          $ref: '#/components/schemas/MediaFileQuality'
+          nullable: true
+          description: The quality of the original file
+        shotAt:
+          type: string
+          description: When the clip was originally created / shot in the Cinebody app. Manually uploaded videos will use the upload time
+          example: '2021-07-29T01:42:13.456Z'
+        favorite:
+          type: boolean
+          description: Whether the filmer marked this as a favorite (hearted it) in the cinebody app
+          example: true
+        thumbnails:
+          type: array
+          description: Array of thumbnails (in order) of the video. Can be used to show a preview of the video without video playback
+          items:
+            type: string
+        orientation:
+          $ref: '#/components/schemas/MediaFileOrientation'
+        TeamId:
+          type: string
+          format: uuid
+          nullable: true
+        UserId:
+          type: string
+          format: uuid
+          nullable: true
+        ProjectId:
+          type: string
+          format: uuid
+          nullable: true
+        ShotId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          description: When the clip was uploaded
+          example: '2021-06-17T17:23:33.714Z'
+        status:
+          $ref: '#/components/schemas/MediaFileStatus'
+        name:
+          type: string
+          nullable: true
+          description: The name of the clip. Can be set / customized.
+          example: Cinebody around the globe Final Video!
+        displayName:
+          type: string
+          description: A user-friendly display name that can be displayed to the user. This string is built from the project, user, and shot details and can be used to organize files.
+        displayNameWithExtension:
+          type: string
+          description: Same as displayName but with file extension
+        moderatedAt:
+          type: string
+          nullable: true
+          description: When this file was last moderated ("status" changed)
+          example: '2021-06-17T17:23:33.714Z'
+        editDescription:
+          type: string
+          nullable: true
+          description: The description used if this is an "edit"
+          example: Here is another final video blah blah...
+        originalFileName:
+          type: string
+          nullable: true
+          description: The original file name as uploaded
+          example: null
+        teamName:
+          type: string
+          description: The name of the team
+          example: Lumenati
+        teamProfileImages:
+          $ref: '#/components/schemas/TeamProfileImages'
+        userName:
+          type: string
+          description: The name of the user that uploaded the clip
+        userProfileImages:
+          $ref: '#/components/schemas/UserProfileImages'
+    TeamProfileImages:
+      description: The team profile images
+      type: object
+      properties:
+        profile80:
+          type: string
+          description: URL of the profile image (80x80)
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_80.jpg
+        profile80@2x:
+          type: string
+          description: URL of the profile image (160x160) to be used @2x
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_80@2x.jpg
+        profile150:
+          type: string
+          description: URL of the profile image (150x150) to be used @2x
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_150.jpg
+        profile150@2x:
+          type: string
+          description: URL of the profile image (300x300) to be used @2x
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_150@2x.jpg
+    UserProfileImages:
+      type: object
+      description: The profile picture / icon of the organization
+      properties:
+        profile60:
+          type: string
+          description: URL of the profile image (60x60)
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X60.jpg
+        profile60@2x:
+          type: string
+          description: URL of the profile image (120x120) to be used @2x
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X60@2x.jpg
+        profile150:
+          type: string
+          description: URL of the profile image (150x150) to be used @2x
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150.jpg
+        profile150@2x:
+          type: string
+          description: URL of the profile image (300x300) to be used @2x
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150@2x.jpg
     # Enums
     TeamStatus:
       type: string
@@ -1668,6 +2149,17 @@ components:
         - portraitNoRotate
       example: landscapeLeft
       description: The direction of the project image.
+    MediaFileOrientation:
+      type: string
+      enum:
+        - landscapeLeft
+        - landscapeRight
+        - portrait
+        - upsideDown
+        - landscape
+        - portraitNoRotate
+      example: landscapeLeft
+      description: The direction of the media file
     FilterUserType:
       type: string
       enum: [all, admin, teamAdmin]
@@ -1677,6 +2169,50 @@ components:
          * `all` - All organization and team admins
          * `admin` - Organization admins only
          * `teamAdmin` - Team admins only
+    MediaFileFps:
+      type: number
+      enum:
+        - 18
+        - 24
+        - 25
+        - 30
+        - 60
+        - 120
+        - 240
+      example: 30
+      description: >
+        The FPS for a MediaFile
+    MediaFileQuality:
+      type: string
+      enum:
+        - 720
+        - 1080
+        - 4k
+      example: 1080
+      description: >
+        The video quality
+    MediaFileVideoType:
+      type: string
+      enum:
+        - full
+        - sd
+      example: full
+      description: >
+        Video Type:
+         * `full` - The full, original video unaltered in it's original format
+         * `sd` - Standard definition. This video is transcoded for better streaming playback and is lower quality.
+    MediaFileStatus:
+      type: string
+      enum:
+        - pending
+        - approved
+        - rejected
+      example: approved
+      description: >
+        Video Type:
+         * `pending` - The video has not been moderated
+         * `approved` - An admin has reviewed this video and approved it
+         * `rejected` - An admin has reviewed this video and rejected it
     ProjectsSortBy:
       type: string
       enum: [title, orientation, startAt, endAt]
@@ -1785,6 +2321,44 @@ components:
         - status
         - newStatus
         - isGeoVisible
+    MediaFileAttribute:
+      enum:
+        - id
+        - fileUUID
+        - fileUUIDSD
+        - thumbnailUUID
+        - contentType
+        - fileSize
+        - fileSizeSD
+        - thumbSize
+        - lengthSeconds
+        - description
+        - isEdit
+        - transcoded
+        - transcodingError
+        - shotInCaseMode
+        - fps
+        - quality
+        - shotAt
+        - favorite
+        - thumbnails
+        - orientation
+        - TeamId
+        - UserId
+        - ProjectId
+        - ShotId
+        - createdAt
+        - status
+        - name
+        - displayName
+        - displayNameWithExtension
+        - moderatedAt
+        - editDescription
+        - originalFileName
+        - teamName
+        - teamProfileImages
+        - userName
+        - userProfileImages
     # Errors
     ErrorBadRequest:
       type: object
@@ -1939,6 +2513,14 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/UserAttribute'
+    mediaFileAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/MediaFileAttribute'
   responses:
     400:
       description: A bad request was made. Check the error code and parameters sent.
