@@ -8,6 +8,30 @@ security:
   - APIKey: []
 tags: []
 paths:
+  /app/3.0/apiAppTypes:
+    get:
+      tags:
+        - Typescript
+      summary: Get latest typescript types. This includes TS definitions for endpoints and models.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  types:
+                    description: A string of typescript types that define the CinebodyAPI namespace. This should be written directly to a file and then imported into your app for convenient typescript typings.
+                    type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
   /app/3.0/organizations:
     get:
       tags:
@@ -54,7 +78,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Sucess
+          description: Success
           content:
             application/json:
               schema:
@@ -95,7 +119,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Sucess
+          description: Success
           content:
             application/json:
               schema:
@@ -264,7 +288,7 @@ paths:
             type: string
       responses:
         '200':
-          description: The user was deleted
+          description: Success
           content:
             application/json:
               schema:
@@ -319,7 +343,7 @@ paths:
         - $ref: '#/components/parameters/page'
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -378,7 +402,7 @@ paths:
                 - required: [email, type]
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -436,7 +460,7 @@ paths:
                       example: null
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -731,6 +755,40 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Projects
+      summary: Delete a project
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/projectAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
   /app/3.0/getProjectCode:
     get:
       tags:
@@ -772,7 +830,7 @@ paths:
               type: string
       responses:
         '200':
-          description: Join code availability info
+          description: Success
           content:
             application/json:
               schema:
@@ -788,6 +846,561 @@ paths:
                         type: boolean
                         description: Whether the join code is available
                         example: true
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/shotTypes:
+    get:
+      tags:
+        - Projects
+      summary: Get shot types. These are global example / default categories for Shots
+      parameters:
+        - $ref: '#/components/parameters/shotTypeAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      shotTypes:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ShotType'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projectTemplates:
+    get:
+      tags:
+        - Projects
+      summary: Get project templates. These can be used during project creation as a starting point for the project.
+      parameters:
+        - $ref: '#/components/parameters/projectAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      projectTemplates:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/stats:
+    get:
+      tags:
+        - Projects
+      summary: Get project stats
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/shotAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      stats:
+                        $ref: '#/components/schemas/ProjectStats'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/shots:
+    get:
+      tags:
+        - Projects
+      summary: Get project shots
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/shotAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      shots:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Shot'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Projects
+      summary: Create a project shot
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/shotAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - shotTypeId
+                - projectId
+              properties:
+                title:
+                  type:  string
+                  description: The title of the shot
+                  example: Action
+                description:
+                  type:  string
+                  description: A description of the shot
+                  example: Get into the action! Emphasize the energy and movement in your clips with slow mo and super slow mo settings.
+                shotTypeId:
+                  type:  string
+                  format: uuid
+                  description: The shot type to associate this shot to
+                projectId:
+                  type:  string
+                  format: uuid
+                  description: The project to create the shot
+                orientation:
+                  $ref: '#/components/schemas/MediaFileOrientation'
+                  nullable: true
+                fps:
+                  $ref: '#/components/schemas/MediaFileFps'
+                  nullable: true
+                quality:
+                  $ref: '#/components/schemas/MediaFileQuality'
+                  nullable: true
+                order:
+                  type: number
+                  nullable: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      shots:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Shot'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags:
+        - Projects
+      summary: Update project shots
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/shotAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - shotsToUpdate
+              properties:
+                shotsToUpdate:
+                  type:  array
+                  required:
+                      - ""
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type:  string
+                        format: uuid
+                        description: The shot id
+                      title:
+                        type:  string
+                        description: The title of the shot
+                        example: Action
+                      description:
+                        type:  string
+                        description: A description of the shot
+                        example: Get into the action! Emphasize the energy and movement in your clips with slow mo and super slow mo settings.
+                      orientation:
+                        $ref: '#/components/schemas/MediaFileOrientation'
+                        nullable: true
+                      fps:
+                        $ref: '#/components/schemas/MediaFileFps'
+                        nullable: true
+                      quality:
+                        $ref: '#/components/schemas/MediaFileQuality'
+                        nullable: true
+                      order:
+                        type: number
+                        nullable: true
+                      hidden:
+                        type: boolean
+                        nullable: true
+                        example: false
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/shots/{shotId}:
+    delete:
+      tags:
+        - Projects
+      summary: Delete a shot
+      description: Clips associated to a deleted shot will be moved to "Free Shoot"
+      parameters:
+        - name: shotId
+          required: true
+          in: path
+          description: The shot id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/upload:
+    get:
+      tags:
+        - Uploads
+      summary: Request an upload for project clip, edit, shot, or shot example. After upload of all file parts is complete, a second request must be made to finalize the upload.
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - name: contentType
+          schema:
+            type: string
+          in: query
+          description: The video content/mime type
+        - name: ext
+          schema:
+            type: string
+          in: query
+          description: The file extension to use
+        - name: type
+          schema:
+            $ref: '#/components/schemas/ProjectUploadType'
+          in: query
+          description: The type of video
+        - name: sizeBytes
+          schema:
+            type: number
+          in: query
+          description: The size of the file in bytes
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      signedUrls:
+                        type: array
+                        description: The signed upload urls
+                        items:
+                          type: string
+                      chunkSizeBytes:
+                        type: number
+                        description: The size of each chunk (except the last one) in bytes
+                      filename:
+                        type: string
+                        description: The name of the file
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/clipCompleteUpload:
+    post:
+      tags:
+        - Uploads
+      summary: Completes a multipart clip upload
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/mediaFileAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filename:
+                  description: The filename obtained from the response of the Get Upload Url request
+                  type: string
+                originalFileName:
+                  type: string
+                  description: The original filename
+                  example: my-uploaded-vid.mp4
+                contentType:
+                  type: string
+                  description: The content mime type
+                  example: video/mp4
+                parts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      partNumber:
+                        type: number
+                      etag:
+                        type: string
+                uploadId:
+                  type: string
+                duration:
+                  type: number
+                  description: The duration of the clip in seconds
+                shotInCaseMode:
+                  type: boolean
+                  description: Legacy Super 8 case-mode support
+                  example: false
+                shotId:
+                  type: string
+                  description: The shot id to associate with the clip
+                isEdit:
+                  type: boolean
+                  description: If this clip is an edit
+                fps:
+                  $ref: '#/components/schemas/MediaFileFps'
+                quality:
+                  $ref: '#/components/schemas/MediaFileQuality'
+                shotAt:
+                  type: string
+                  description: When the clip was actually filmed
+                  example: '2021-07-29T01:42:13.456Z'
+                orientation:
+                  $ref: '#/components/schemas/MediaFileOrientation'
+                lat:
+                  type: number
+                  description: The latitude where the clip was filmed
+                  example: 41.904755
+                lng:
+                  type: number
+                  description: The longitude where the clip was filmed
+                  example: 12.454628
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      mediaFile:
+                        $ref: '#/components/schemas/MediaFile'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/shotExampleCompleteUpload:
+    post:
+      tags:
+        - Uploads
+      summary: Completes a multipart clip upload for a shot example video
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/shotAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filename:
+                  description: The filename obtained from the response of the Get Upload Url request
+                  type: string
+                shotId:
+                  type: string
+                  description: The shot id to associate with the clip
+                hasNoPadding:
+                  type: boolean
+                  description: Whether this example clips should not be padded
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      shot:
+                        $ref: '#/components/schemas/Shot'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/teaserCompleteUpload:
+    post:
+      tags:
+        - Uploads
+      summary: Completes a multipart clip upload for a project teaser video
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/projectAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filename:
+                  description: The filename obtained from the response of the Get Upload Url request
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      project:
+                        $ref: '#/components/schemas/Project'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -867,7 +1480,7 @@ paths:
         - $ref: '#/components/parameters/page'
       responses:
         '200':
-          description: Join code availability info
+          description: Success
           content:
             application/json:
               schema:
@@ -925,7 +1538,7 @@ paths:
                 - required: [email, type]
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -975,7 +1588,7 @@ paths:
                   $ref: '#/components/schemas/UserProjectStatus'
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -1026,7 +1639,7 @@ paths:
         - $ref: '#/components/parameters/page'
       responses:
         '200':
-          description: The teams that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -1065,7 +1678,7 @@ paths:
         - $ref: '#/components/parameters/teamAttributes'
       responses:
         '200':
-          description: The team
+          description: Success
           content:
             application/json:
               schema:
@@ -1097,7 +1710,7 @@ paths:
         - $ref: '#/components/parameters/teamAttributes'
       responses:
         '200':
-          description: The team was deleted
+          description: Success
           content:
             application/json:
               schema:
@@ -1218,7 +1831,7 @@ paths:
         - $ref: '#/components/parameters/page'
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -1277,7 +1890,7 @@ paths:
                 - required: [email, type]
       responses:
         '200':
-          description: The users that match the request
+          description: Success
           content:
             application/json:
               schema:
@@ -1357,6 +1970,93 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+  /app/3.0/mediaFiles/{mediaFileId}:
+    patch:
+      tags:
+        - Videos
+      summary: Update / moderate a video file
+      parameters:
+        - name: mediaFileId
+          required: true
+          in: path
+          description: The video/clip id
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Friendly name for the file. Used for final videos and displayed to users.
+                  example: Cinebody Around The Globe
+                description:
+                  type: string
+                  description: A description of the file. Not currently displayed to users.
+                  example: Filmed at the Louvre
+                editDescription:
+                  type: string
+                  description: Friendly description for the file. Used for final videos and displayed to users.
+                  example: Thank you for participating! This is the final video for our Around The Globe campaign.
+                status:
+                  $ref: '#/components/schemas/MediaFileStatus'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      mediaFile:
+                        $ref: '#/components/schemas/MediaFile'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Videos
+      summary: Delete a video file
+      parameters:
+        - name: mediaFileId
+          required: true
+          in: path
+          description: The video/clip id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
   /app/3.0/mediaFiles/{mediaFileId}/download:
     get:
       tags:
@@ -1366,7 +2066,7 @@ paths:
         - name: mediaFileId
           required: true
           in: path
-          description: The team id
+          description: The clip/video id
           schema:
             type: string
             format: uuid
@@ -2025,6 +2725,165 @@ components:
           type: string
           description: URL of the profile image (300x300) to be used @2x
           example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150@2x.jpg
+    Shot:
+      type: object
+      description: A project shot
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          description: The shot title
+          example: Action
+        description:
+          type: string
+          description: The shot description
+          example: Capture skateboarders jumping!
+        orientation:
+          $ref: '#/components/schemas/MediaFileOrientation'
+        fps:
+          $ref: '#/components/schemas/MediaFileFps'
+        quality:
+          $ref: '#/components/schemas/MediaFileQuality'
+        order:
+          type: number
+          description: The order of this shot in the shot list
+          example: 3
+        hidden:
+          type: boolean
+          description: Whether this shot is hidden
+          example: false
+        fileSize:
+          type: number
+          description: The size of the full example video in bytes
+        fileSizeSD:
+          type: number
+          description: The size of the transcoded standard definition example video in bytes
+        thumbSize:
+          type: number
+          description: The size of the generated thumbnails in bytes
+        transcoded:
+          type: boolean
+          description: Whether the video has been transcoded and standard definition video is available
+        transcodingError:
+          type: boolean
+          description: Whether there was an error transcoding
+        fileUUID:
+          type: string
+          description: The full video filename
+        fileUUIDSD:
+          type: string
+          description: The transcoded video filename
+        lengthSeconds:
+          type: number
+          description: The length of the video in seconds
+        thumbnails:
+          type: array
+          description: Thumbnail stills of the video that can be used for previews
+          items:
+            type: string
+        tutorialVideoUrl:
+          type: string
+          nullable: true
+          description: The url to the example video
+        ShotTypeId:
+          type: string
+          format: uuid
+          description: The shot type
+        TeamId:
+          type: string
+          format: uuid
+          description: The team
+        ProjectId:
+          type: string
+          format: uuid
+          description: The project
+    ShotType:
+      type: object
+      description: Category for a shot with default values that can be customized on a Shot
+      properties:
+        id:
+          type:  string
+          format: uuid
+          description: The shot id
+        name:
+          type:  string
+          description: The shot type name
+          example: Action
+        description:
+          type:  string
+          nullable: true
+          description: A description of the shot type
+          example: Get into the action! Emphasize the energy and movement in your clips with slow mo and super slow mo settings.
+        icon:
+          type:  string
+          nullable: true
+          description: An SVG icon representing the shot type
+          example: <svg>...</svg>
+        fps:
+          $ref: '#/components/schemas/MediaFileFps'
+          nullable: true
+        quality:
+          $ref: '#/components/schemas/MediaFileQuality'
+          nullable: true
+        defaultImageUrl:
+          type:  string
+          nullable: true
+          description: Poster image for the shot type example video
+          example: https://s3.amazonaws.com/cinebody/shotlist-default-images/action_v2.jpg
+        tutorialVideoUrl:
+          type:  string
+          nullable: true
+          description: Example video showing the shot type
+          example: https://s3.amazonaws.com/cinebody/shotlist-default-images/Action_v2.mp4
+    ProjectUserClipCount:
+      type: object
+      description: Clips contributed to a project by a user
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: The User id
+        numClips:
+          type: number
+          description: The number of clips contributed
+    ScheduledNotificationCounts:
+      type: object
+      description: Scheudle notification counts
+      properties:
+        sent:
+          type: number
+          description: The number of notifications in the sent state
+        pending:
+          type: number
+          description: The number of notifications in the pending state
+        processing:
+          type: number
+          description: The number of notifications in the processing state
+        error:
+          type: number
+          description: The number of notifications in the error state
+        blocked:
+          type: number
+          description: The number of notifications in the blocked state
+    ProjectStats:
+      type: object
+      description: Stats about a project
+      properties:
+        totalLengthSeconds:
+          type:  number
+          description: Total length of all clips in the project
+          example: 4815162342
+        counts:
+          $ref: '#/components/schemas/ProjectMediaCounts'
+        scheduledNotificationCounts:
+          $ref: '#/components/schemas/ScheduledNotificationCounts'
+        numUsers:
+          type: number
+          description: The number of users on the project
+        userClipCounts:
+          $ref: '#/components/schemas/ProjectUserClipCount'
     # Enums
     TeamStatus:
       type: string
@@ -2359,6 +3218,45 @@ components:
         - teamProfileImages
         - userName
         - userProfileImages
+    ShotAttribute:
+      enum:
+        - id
+        - title
+        - description
+        - orientation
+        - fps
+        - quality
+        - order
+        - hidden
+        - fileSize
+        - fileSizeSD
+        - thumbSize
+        - transcoded
+        - transcodingError
+        - fileUUID
+        - fileUUIDSD
+        - lengthSeconds
+        - thumbnails
+        - tutorialVideoUrl
+        - ShotTypeId
+        - TeamId
+        - ProjectId
+    ShotTypeAttributes:
+      enum:
+        - id
+        - name
+        - description
+        - icon
+        - fps
+        - quality
+        - defaultImageUrl
+        - tutorialVideoUrl
+    ProjectUploadType:
+      enum:
+        - clip
+        - edit
+        - shot
+        - teaser
     # Errors
     ErrorBadRequest:
       type: object
@@ -2521,6 +3419,22 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/MediaFileAttribute'
+    shotAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ShotAttribute'
+    shotTypeAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ShotTypeAttributes'
   responses:
     400:
       description: A bad request was made. Check the error code and parameters sent.
