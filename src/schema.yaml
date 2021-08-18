@@ -63,7 +63,6 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
-
   /app/3.0/organizations/{organizationId}/storage:
     get:
       tags:
@@ -1722,6 +1721,64 @@ paths:
                         type: string
                         enum:
                           - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags:
+        - Teams
+      summary: Update a team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+        - $ref: '#/components/parameters/teamAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The team name
+                      example: Lumenati Illumenati
+                    description:
+                      type: string
+                      description: A description of the team
+                      example: Not to be confused with the Lumenati Illumenati
+                    slug:
+                      type: string
+                      description: The team slug
+                      example: lumenati
+                    pagePublished:
+                      description: Whether the team page has been published
+                      type:  boolean
+                    status:
+                      $ref: '#/components/schemas/TeamStatus'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      organization:
+                        $ref: '#/components/schemas/Organization'
         '400':
           $ref: '#/components/responses/400'
         '403':
