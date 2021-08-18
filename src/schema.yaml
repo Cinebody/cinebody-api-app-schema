@@ -264,7 +264,7 @@ paths:
             type: string
       responses:
         '200':
-          description: The team was deleted
+          description: The user was deleted
           content:
             application/json:
               schema:
@@ -386,14 +386,9 @@ paths:
                   - $ref: '#/components/schemas/APIVersion'
                   - type: object
                     properties:
-                      count:
-                        type: number
-                        description: The total number of users that match the request. Used for pagination.
-                        example: 36
-                      users:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/User'
+                      user:
+                        $ref: '#/components/schemas/User'
+
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -888,7 +883,7 @@ paths:
             type: string
       responses:
         '200':
-          description: The team was deleted
+          description: Success
           content:
             application/json:
               schema:
@@ -914,9 +909,9 @@ paths:
         - Users
       summary: Get team users
       parameters:
-        - name: organizationId
+        - name: teamId
           in: path
-          description: The organization to fetch
+          description: The team
           required: true
           schema:
             type: string
@@ -1139,7 +1134,7 @@ components:
                 profile1200@2x:
                   type: string
                   description: URL of the hero image (2400x2400) to be used @2x
-                  example: https://s3.amazonaws.com/cinebody/default-org-hero--X1200@2x.jpg"
+                  example: https://s3.amazonaws.com/cinebody/default-org-hero--X1200@2x.jpg
             isBilledOffline:
               type: boolean
               description: Whether the organization is billed offline via manual invoice
@@ -1212,7 +1207,7 @@ components:
             profile1200@2x:
               type: string
               description: URL of the hero image (2400x2400) to be used @2x
-              example: https://s3.amazonaws.com/cinebody/default-team-hero--X1200@2x.jpg"
+              example: https://s3.amazonaws.com/cinebody/default-team-hero--X1200@2x.jpg
         slug:
           description: The team slug
           type:  string
@@ -1223,14 +1218,17 @@ components:
         OrganizationId:
           description: The organization for this team
           type:  string
+          format: uuid
         description:
           description: The team description
           type:  string
+          example: A super interesting team
         userCounts:
           $ref: '#/components/schemas/TeamUserCounts'
         teamClipCount:
           description: The total number of videos that have been shot for all projects on this team
           type:  number
+          example: 413
         hasAnIncentive:
           description: Whether the team has an active project with an incentive
           type:  boolean
@@ -1954,12 +1952,28 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorNotAuthorized'
+    404:
+      description: The resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorNotFound'
     406:
       description: The request is missing required parameters.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorMissingParameters'
+    418:
+      description: I'm a teapot
+      content:
+        application/json:
+          schema:
+            properties:
+              isATeapot:
+                type: boolean
+                example: true
+                description: Denotes whether I am in fact a teapot
     500:
       description: The server encountered an unspecified error. This is a catch-all error. Check your request and parameters are valid.
       content:
