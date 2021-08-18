@@ -1,0 +1,2268 @@
+openapi: 3.0.1
+info:
+  title: 'Cinebody API'
+  version: 'v3'
+servers:
+  - url: https://app-api.cinebody.com/
+security:
+  - APIKey: []
+tags: []
+paths:
+  /app/3.0/organizations:
+    get:
+      tags:
+        - Organizations
+      summary: Get organizations this app has access to
+      parameters:
+        - $ref: '#/components/parameters/organizationAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: invite
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      organizations:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /app/3.0/organizations/{organizationId}/storage:
+    get:
+      tags:
+        - Organizations
+      summary: Get organization stats
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucess
+          content:
+            application/json:
+              schema:
+                allOf:
+                    - $ref: '#/components/schemas/APIVersion'
+                    - type: object
+                      properties:
+                        apiVersion:
+                          type: string
+                          description: The current api version
+                          example: 3.26.1
+                        totalBytes:
+                          type: number
+                          description: The total number of bytes used by the organization
+                          example: 33402653444
+                        teamStorage:
+                          additionalProperties:
+                            $ref: '#/components/schemas/TeamStorageUsage'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/organizations/{organizationId}/stats:
+    get:
+      tags:
+        - Organizations
+      summary: Get organization stats
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucess
+          content:
+            application/json:
+              schema:
+                allOf:
+                    - $ref: '#/components/schemas/APIVersion'
+                    - type: object
+                      properties:
+                        apiVersion:
+                          type: string
+                          description: The current api version
+                          example: 3.26.1
+                        stats:
+                          $ref: '#/components/schemas/OrganizationStats'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/organizations/{organizationId}:
+    get:
+      tags:
+        - Organizations
+      summary: Get a single organization
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization to fetch
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/organizationAttributes'
+      responses:
+        '200':
+          description: invite
+          content:
+            application/json:
+              schema:
+                allOf:
+                    - $ref: '#/components/schemas/APIVersion'
+                    - type: object
+                      properties:
+                        apiVersion:
+                          type: string
+                          description: The current api version
+                          example: 3.26.1
+                        organization:
+                          $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags:
+        - Organizations
+      summary: Update an organization
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization to fetch
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/organizationAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The organization name
+                  example: Lumenati Updated
+                email:
+                  type: string
+                  description: The organization billing contact email
+                  example: billing@example.com
+                billingName:
+                  type: string
+                  description: The name of the billing contact
+                  example: Travis
+                addressName:
+                  type: string
+                  description: The address of the organization
+                  example: Lumenati Headquarters
+                addressLine1:
+                  type: string
+                  description: The address of the organization
+                  example: 3839 Jackson St
+                  nullable: true
+                addressLine2:
+                  type: string
+                  description: The address of the organization
+                  nullable: true
+                  example: null
+                addressCity:
+                  type: string
+                  description: The address of the organization
+                  example: Denver
+                  nullable: true
+                addressState:
+                  type: string
+                  description: The address of the organization
+                  example: CO
+                  nullable: true
+                addressZip:
+                  type: string
+                  description: The address of the organization
+                  example: 80205
+                addressCountry:
+                  type: string
+                  description: The address of the organization
+                  example: US
+                stripeToken:
+                  type: string
+                  description: The stripe payment token to use for the account
+                  example: stripe_12345
+                shouldAutoUpgrade:
+                  type: boolean
+                  description: Whether to automatically add storage add-ons when storage limits for the plan are hit.
+                  example: true
+      responses:
+        '200':
+          description: invite
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      organization:
+                        $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/organizations/{organizationId}/users/{userId}:
+    delete:
+      tags:
+        - Users
+      summary: Delete an organization user
+      parameters:
+        - name: organizationId
+          required: true
+          in: path
+          description: The organization id
+          schema:
+            type: string
+        - name: userId
+          required: true
+          in: path
+          description: The user id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The user was deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/organizations/{organizationId}/users:
+    get:
+      tags:
+        - Users
+      summary: Get organization users
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization to fetch
+          required: true
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: Limit results to users that match this name
+          example: trav
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          schema:
+            $ref: '#/components/schemas/UsersSortBy'
+        - name: sortOrder
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/FilterUserType'
+        - $ref: '#/components/parameters/userAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of users that match the request. Used for pagination.
+                        example: 36
+                      users:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Users
+      summary: Add user to an organization
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/userAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  description: The user id. Email must be specified if user id is not.
+                email:
+                  type: string
+                  description: The user's email. User id must be specified if email is not.
+                  example: newuser@example.com
+                type:
+                  $ref: '#/components/schemas/UserType'
+              anyOf:
+                - required: [userId]
+                - required: [email]
+                - required: [userId, type]
+                - required: [email, type]
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/organizations/{organizationId}/teams:
+    post:
+      tags:
+        - Teams
+      summary: Create a new team
+      parameters:
+        - name: organizationId
+          in: path
+          description: The organization that owns the project
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/teamAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The team name
+                      example: Lumenati Illumenati
+                    description:
+                      type: string
+                      description: A description of the team
+                      example: Not to be confused with the Lumenati Illumenati
+                    slug:
+                      type: string
+                      description: The team slug
+                      example: lumenati
+                    profileImage:
+                      type: string
+                      description: Base64 encoded image that should be used for the team profile image
+                      example: null
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of users that match the request. Used for pagination.
+                        example: 36
+                      users:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects:
+    get:
+      tags:
+        - Projects
+      summary: Get projects the app has access to
+      parameters:
+        - name: q
+          in: query
+          description: Limit results to projects that match this title
+          example: lum
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          schema:
+            $ref: '#/components/schemas/ProjectsSortBy'
+        - name: sortOrder
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - name: orientation
+          in: query
+          schema:
+            $ref: '#/components/schemas/ProjectOrientation'
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/ProjectType'
+        - name: publishStatus
+          in: query
+          schema:
+            $ref: '#/components/schemas/ProjectPublishStatus'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ProjectStatus'
+        - name: organizationIds
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Limit results to these organizations
+        - name: teamIds
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Limit results to these teams
+        - $ref: '#/components/parameters/projectAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of projects that match the request. Used for pagination.
+                        example: 36
+                      projects:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}:
+    get:
+      tags:
+        - Projects
+      summary: Get a project by id
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/projectAttributes'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      project:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/getProjectCode:
+    get:
+      tags:
+        - Projects
+      summary: Generates an unused joinCode
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      joinCode:
+                        type: string
+                        description: The join code that was checked
+                        example: bos1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/checkProjectCode:
+    get:
+      tags:
+        - Projects
+      summary: Check if a project code is available
+      parameters:
+          - name: joinCode
+            in: query
+            description: The code to check
+            required: true
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Join code availability info
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      joinCode:
+                        type: string
+                        description: The join code that was checked
+                        example: lumen13
+                      isAvailable:
+                        type: boolean
+                        description: Whether the join code is available
+                        example: true
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/users:
+    post:
+      tags:
+        - Users
+      summary: Add user to a project
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/userAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  description: The user id. Email must be specified if user id is not.
+                email:
+                  type: string
+                  description: The user's email. User id must be specified if email is not.
+                  example: newuser@example.com
+              anyOf:
+                - required: [userId]
+                - required: [email]
+                - required: [userId, type]
+                - required: [email, type]
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of users that match the request. Used for pagination.
+                        example: 36
+                      user:
+                        $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/users/{userId}:
+    patch:
+      tags:
+        - Users
+      summary: Update the status of the user on the project. Used to block / unblock users
+      parameters:
+        - name: projectId
+          in: path
+          description: The project id
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: The user id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  $ref: '#/components/schemas/UserProjectStatus'
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/teams:
+    get:
+      tags:
+        - Teams
+      summary: Get teams the app has access to
+      parameters:
+        - name: organizationIds
+          in: query
+          description: Limit results to teams that are part of these organizations
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: sortBy
+          in: query
+          schema:
+            $ref: '#/components/schemas/TeamsSortBy'
+        - name: sortOrder
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/TeamStatus'
+        - $ref: '#/components/parameters/teamAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: The teams that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of teams that match the request. Used for pagination.
+                        example: 36
+                      teams:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/teams/{teamId}:
+    get:
+      tags:
+        - Teams
+      summary: Get team by id
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+        - $ref: '#/components/parameters/teamAttributes'
+      responses:
+        '200':
+          description: The team
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      team:
+                        $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Teams
+      summary: Delete a team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+        - $ref: '#/components/parameters/teamAttributes'
+      responses:
+        '200':
+          description: The team was deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/teams/{teamId}/users/{userId}:
+    delete:
+      tags:
+        - Users
+      summary: Delete a team user
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+        - name: userId
+          required: true
+          in: path
+          description: The user id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/teams/{teamId}/users:
+    get:
+      tags:
+        - Users
+      summary: Get team users
+      parameters:
+        - name: teamId
+          in: path
+          description: The team
+          required: true
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: Limit results to users that match this name
+          example: trav
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          schema:
+            $ref: '#/components/schemas/UsersSortBy'
+        - name: sortOrder
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/FilterUserType'
+        - name: projectId
+          in: query
+          schema:
+            type: string
+          description: If set, will fetch users in only this project as well as their status. "inProjectIds" and "notInProjectIds" will be ignored.
+        - name: inProjectIds
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Finds users that are in these projects
+        - name: notInProjectIds
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Finds users that are NOT in these projects
+        - name: userIds
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Retrieve users by ids
+        - $ref: '#/components/parameters/userAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of users that match the request. Used for pagination.
+                        example: 36
+                      users:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Users
+      summary: Add user to a team
+      parameters:
+        - name: teamId
+          in: path
+          description: The team id
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/userAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  description: The user id. Email must be specified if user id is not.
+                email:
+                  type: string
+                  description: The user's email. User id must be specified if email is not.
+                  example: newuser@example.com
+                type:
+                  $ref: '#/components/schemas/UserType'
+              anyOf:
+                - required: [userId]
+                - required: [email]
+                - required: [userId, type]
+                - required: [email, type]
+      responses:
+        '200':
+          description: The users that match the request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      count:
+                        type: number
+                        description: The total number of users that match the request. Used for pagination.
+                        example: 36
+                      users:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/mediaFiles/download:
+    get:
+      tags:
+        - Videos
+      summary: Get download urls for multiple videos by filename
+      parameters:
+        - name: teamId
+          required: true
+          in: query
+          description: The team id
+          schema:
+            type: string
+            format: uuid
+        - name: projectId
+          in: query
+          description: The project id
+          schema:
+            type: string
+            format: uuid
+        - name: filenames
+          required: true
+          in: query
+          description: The filenames to download
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      urls:
+                        type: array
+                        items:
+                          properties:
+                            signedUrl:
+                              type: string
+                              description: The signed download URL. This link will expire.
+                            filename:
+                              type: string
+                              description: The filename to use when saving the file
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/mediaFiles/{mediaFileId}/download:
+    get:
+      tags:
+        - Videos
+      summary: Download a specific media file by id.
+      parameters:
+        - name: mediaFileId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      url:
+                        type: string
+                        description: The signed download url
+                      filename:
+                        type: string
+                        description: The filename to use when saving the file
+
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    Address:
+      description: An address. Not currently used.
+      type: object
+      properties:
+        addressName:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+        addressLine1:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+        addressLine2:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+        addressCity:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+        addressState:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+        addressZip:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+        addressCountry:
+          description: Placeholder. Not currently used.
+          type: string
+          nullable: true
+          example: null
+    Organization:
+      allOf:
+        - $ref: '#/components/schemas/Address'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+              example: Lumenati
+            status:
+              $ref: '#/components/schemas/OrganizationStatus'
+            storageStatus:
+              $ref: '#/components/schemas/OrganizationStorageStatus'
+            profileImages:
+              type: object
+              description: The profile picture / icon of the organization
+              properties:
+                profile80:
+                  type: string
+                  description: URL of the profile image (80x80)
+                  example: https://s3.amazonaws.com/cinebody/default-logos/L_80.jpg
+                profile80@2x:
+                  type: string
+                  description: URL of the profile image (160x160) to be used @2x
+                  example: https://s3.amazonaws.com/cinebody/default-logos/L_80@2x.jpg
+                profile150:
+                  type: string
+                  description: URL of the profile image (150x150) to be used @2x
+                  example: https://s3.amazonaws.com/cinebody/default-logos/L_150.jpg
+                profile150@2x:
+                  type: string
+                  description: URL of the profile image (300x300) to be used @2x
+                  example: https://s3.amazonaws.com/cinebody/default-logos/L_150@2x.jpg
+            heroImages:
+              type: object
+              description: A hero image that can be used as a banner
+              properties:
+                profile1200:
+                  type: string
+                  description: URL of the hero image (1200x1200)
+                  example: https://s3.amazonaws.com/cinebody/default-org-hero--X1200.jpg
+                profile1200@2x:
+                  type: string
+                  description: URL of the hero image (2400x2400) to be used @2x
+                  example: https://s3.amazonaws.com/cinebody/default-org-hero--X1200@2x.jpg
+            isBilledOffline:
+              type: boolean
+              description: Whether the organization is billed offline via manual invoice
+              example: false
+            lockedClipsAt:
+              type: string
+              description: If the organization has exceeded storage limits or let the subscription lapse, clips may be locked
+              nullable: true
+              example: null
+            endFreeTrialAt:
+              type: string
+              description: When the free trial will end. This value might be in the past.
+              example: '2021-07-29T01:42:13.456Z'
+            shouldAutoUpgrade:
+              type: boolean
+              description: Whether storage add-ons will be automatically added to the subscription when storage limits are exceeded.
+            isLocked:
+              type: boolean
+              description: The organization is locked out because of a subscription status issue
+              example: false
+    Team:
+      description: A team
+      type: object
+      properties:
+        id:
+          description: The team id
+          type:  string
+        name:
+          description: The name of the team
+          type:  string
+        profileImages:
+          $ref: '#/components/schemas/TeamProfileImages'
+        status:
+          description: The current status of the team
+          $ref: '#/components/schemas/TeamStatus'
+        awsFolderName:
+          description: The team folder name in S3. Used for building URLs to assets
+          type:  string
+          nullable: true
+        heroImageUUID:
+          description: The hero image id
+          type:  string
+          nullable: true
+        heroImages:
+          description: Hero images for the team
+          type:  object
+          properties:
+            profile1200:
+              type: string
+              description: URL of the hero image (1200x1200)
+              example: https://s3.amazonaws.com/cinebody/default-team-hero--X1200.jpg
+            profile1200@2x:
+              type: string
+              description: URL of the hero image (2400x2400) to be used @2x
+              example: https://s3.amazonaws.com/cinebody/default-team-hero--X1200@2x.jpg
+        slug:
+          description: The team slug
+          type:  string
+          nullable: true
+        pagePublished:
+          description: Whether the team page has been published
+          type:  boolean
+        OrganizationId:
+          description: The organization for this team
+          type:  string
+          format: uuid
+        description:
+          description: The team description
+          type:  string
+          example: A super interesting team
+        userCounts:
+          $ref: '#/components/schemas/TeamUserCounts'
+        teamClipCount:
+          description: The total number of videos that have been shot for all projects on this team
+          type:  number
+          example: 413
+        hasAnIncentive:
+          description: Whether the team has an active project with an incentive
+          type:  boolean
+    TeamUserCounts:
+      description: The number of types of users on a team
+      nullable: true
+      properties:
+        regular:
+          description: The number of regular users on the team.
+          type: number
+        admin:
+          description: The number of admin users on the team. This does not include organization admins.
+          type: number
+        orgAdmin:
+          description: The number of organization admin users on the team.
+          type: number
+    User:
+      description: A cinebody user
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        name:
+          type: string
+          description: A friendly name for the user. This value will always be a string. If the user has not set a name it will default to Creator
+        email:
+          type: string
+          description: The user's email address
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        onlineStatus:
+          $ref: '#/components/schemas/UserOnlineStatus'
+        profileImages:
+          $ref: '#/components/schemas/UserProfileImages'
+        userBio:
+          type: string
+          nullable: true
+          description: A brief description of the user
+          example: null
+    TeamUser:
+      description: Extended user model with information about the user related to a team
+      allOf:
+          - $ref: '#/components/schemas/User'
+          - type: object
+            properties:
+              teamUserType:
+                $ref: '#/components/schemas/UserType'
+              userProjectStatus:
+                $ref: '#/components/schemas/UserProjectStatus'
+    ProjectUserCounts:
+      description: The number of users that have joined a project
+      type: object
+      properties:
+        users:
+          type: number
+    TeamStorageUsage:
+      description: Stats about storage used on a team
+      type: object
+      properties:
+        numFiles:
+          type:  number
+          description: The number of MediaFIles
+        fileSize:
+          type:  number
+          description: The size of original files in bytes
+        fileSizeSD:
+          type:  number
+          description: The size of transcoded videos in bytes
+        thumbSize:
+          type:  number
+          description: The size of thumbnails in bytes
+        total:
+          type:  number
+          description: The total file size in bytes
+
+    OrganizationStats:
+      description: Stats about an organization
+      type: object
+      properties:
+          id:
+            type: string
+            format: uuid
+            description: The organization id
+          numTeams:
+            type: number
+            description: The number of teams in the organization
+            example: 4
+          numProjects:
+            type: number
+            description: The number of projects in the organization
+            example: 8
+          numClips:
+            type: number
+            description: The number of clips uploaded to all projects in the organization
+            example: 15
+          totalLengthSeconds:
+            type: number
+            description: Total length of all clips across all org projects
+            example: 1623
+          numFilmers:
+            type: number
+            description: The number of unique contributors across all org projects
+            example: 42
+    ProjectMediaCounts:
+      description: Clip counts and their moderation status
+      type: object
+      properties:
+        edits:
+          description: AKA Final videos
+          type: object
+          properties:
+              approved:
+                type: number
+                example: 2
+              rejected:
+                type: number
+                example: 1
+              pending:
+                type: number
+                example: 0
+        videos:
+          description: Clips uploaded by users
+          type: object
+          properties:
+              approved:
+                type: number
+                example: 32
+              rejected:
+                type: number
+                example: 1
+              pending:
+                type: number
+                example: 1078
+    Project:
+      description: A cinebody project
+      type: object
+      properties:
+        id:
+          type:  string
+          format: uuid
+          description: The project id
+        title:
+          type:  string
+          nullable: true
+          description: The name of the project
+          example: Cinebody around the globe
+        description:
+          type:  string
+          nullable: true
+          description: Description of the project
+          example: Help us capture footage for Cinebody from everywhere around the world
+        orientation:
+          $ref: '#/components/schemas/ProjectOrientation'
+        shootType:
+          type:  string
+          description: DEPRECATED Describes the theme of the project. Event, Micro-doc, Sports, etc.
+        defaultImageUrl:
+          type:  string
+          nullable: true
+          description: The hero image generated automatically from the last uploaded clip
+          example: https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/mediaThumbs/4a19abd0-d3ac-4a3e-8cdb-b4e442d73029-00001.jpg
+        profileImageUUID:
+          type:  string
+          format: uuid
+          nullable: true
+          description: The project profile image id used to build profile images
+        profileImages:
+          type: object
+          description: The profile images for the project. Might be null.
+          nullable: true
+          properties:
+            profile80:
+              type: string
+              description: URL of the profile image (460x460)
+              example: https://s3.amazonaws.com/cinebody/projectImages/98450db3-1a8e-4bae-a991-c75b5786b506--X460.png
+            profile80@2x:
+              type: string
+              description: URL of the profile image (160x160) to be used @2x
+              example: https://s3.amazonaws.com/cinebody/projectImages/98450db3-1a8e-4bae-a991-c75b5786b506--X460@2x.png
+        defaultImageOrientation:
+          $ref: '#/components/schemas/ProjectImageOrientation'
+        defaultImageIcon:
+          type:  string
+          nullable: true
+          description: Placeholder. Currently not used.
+          example: null
+        publishStatus:
+          type:  ProjectPublishStatus
+          $ref: '#/components/schemas/ProjectPublishStatus'
+        type:
+          $ref: '#/components/schemas/ProjectType'
+        joinCode:
+          type:  string
+          nullable: true
+          description: Used to quick join projects. Unique.
+          example: lumi02
+        TeamId:
+          type:  string
+          format: uuid
+          description: The team for this project
+        OrganizationId:
+          type:  string
+          format: uuid
+          description: The organization for this project
+        createdAt:
+          type:  string
+          description: When the project was created
+          example: '2021-04-28T18:58:04.755Z'
+        updatedAt:
+          type:  string
+          description: Last time the project information was updated. Does not include new videos.
+          example: '2021-08-17T21:19:38.237Z'
+        teaserFileSize:
+          type:  string
+          nullable: true
+          description: Teaser video file size in bytes. This is a string to properly support BigInts in javascript
+          example: '132236162'
+        teaserFileSizeSD:
+          type:  number
+          nullable: true
+          description: SD Teaser video file size in bytes. This is a string to properly support BigInts in javascript
+          example: '8464728'
+        teaserThumbSize:
+          type:  number
+          nullable: true
+          description: Teaser video thumbnail size in bytes
+          example: '150000'
+        teaserTranscoded:
+          type:  boolean
+          description: If the teaser has transcoded
+          example: true
+        teaserTranscodingError:
+          type:  boolean
+          description: If there was an error transocding the teaser video
+          example: flase
+        teaserFileUUID:
+          type:  string
+          nullable: true
+          description: Teaser file id used to build paths to assets
+          example: '3b8d875b-ff21-4219-ba72-38dac7ad1095.mov'
+        teaserFileUUIDSD:
+          type:  string
+          nullable: true
+          description: SD Teaser file id used to build paths to assets
+          example: '3b8d875b-ff21-4219-ba72-38dac7ad1095-SD.mp4'
+        teaserLengthSeconds:
+          type:  number
+          description: The length of the teaser video in seconds
+          example: 73
+        teaserUrl:
+          type:  string
+          nullable: true
+          description: Full url to the SD teaser video
+          example: https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaser/3b8d875b-ff21-4219-ba72-38dac7ad1095-SD.mp4
+        teaserThumbnails:
+          type:  array
+          items:
+            type: string
+          nullable: true
+          description: Array of urls to thumbnail images of frames of the teaser video
+          example: ["https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00001.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00002.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00003.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00004.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00005.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00006.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00007.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00008.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00009.jpg", "https://s3.amazonaws.com/cinebody/teams/team-d1855a03-4ad9-47ba-bbec-a2d2a85ea15e/teaserThumbs/8b732759-0155-423b-8d06-17cf5ef71b02-00010.jpg"]
+        incentive:
+          type:  string
+          nullable: true
+          description: Incentive for filming
+          example: Free t-shirt for selected creators
+        userCounts:
+          $ref: '#/components/schemas/ProjectUserCounts'
+        mediaCounts:
+          $ref: '#/components/schemas/ProjectMediaCounts'
+        startAt:
+          type:  string
+          nullable: true
+          description: The project filming start
+          example: '2020-10-03T00:00:00.000Z'
+        endAt:
+          type:  string
+          nullable: true
+          description: The project filming end
+          example: '2021-11-30T07:00:00.000Z'
+        status:
+          description: DEPRECATED. Use newStatus
+          $ref: '#/components/schemas/ProjectStatus'
+        newStatus:
+          $ref: '#/components/schemas/ProjectStatus'
+          description: Set status based on project startAt and endAt dates
+        isGeoVisible:
+          type:  boolean
+          description: Is clip geo available to admins
+          example: false
+    MediaFile:
+      description: A video file
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fileUUID:
+          type: string
+          description: The file id used to build the path for file download / playback
+        fileUUIDSD:
+          type: string
+          description: The file id used to build the path for the standard definition file download / playback
+        thumbnailUUID:
+          type: string
+          nullable: true
+          description: The file id used to build the path for thumbnails
+        contentType:
+          type: string
+          description: The MIME content type of the file
+        fileSize:
+          type:  number
+          description: The size of the original file in bytes
+        fileSizeSD:
+          type:  number
+          description: The size of the transcoded, standard definition file in bytes
+        thumbSize:
+          type:  number
+          description: The total size of thumbnail assets in bytes
+        lengthSeconds:
+          type: number
+          nullable: true
+          description: The video file length in seconds
+        description:
+          type: string
+          nullable: true
+          description: Description of the video
+        isEdit:
+          type: boolean
+          description: Whether this media file is an "edit"
+        transcoded:
+          type: boolean
+          description: Whether an SD version has been transcoded
+        transcodingError:
+          type: boolean
+          description: Whether there was an error transcoding the SD version
+        shotInCaseMode:
+          type: boolean
+          description: Legacy. Whether this was shot in a cinebody case
+        fps:
+          $ref: '#/components/schemas/MediaFileFps'
+          nullable: true
+        quality:
+          $ref: '#/components/schemas/MediaFileQuality'
+          nullable: true
+          description: The quality of the original file
+        shotAt:
+          type: string
+          description: When the clip was originally created / shot in the Cinebody app. Manually uploaded videos will use the upload time
+          example: '2021-07-29T01:42:13.456Z'
+        favorite:
+          type: boolean
+          description: Whether the filmer marked this as a favorite (hearted it) in the cinebody app
+          example: true
+        thumbnails:
+          type: array
+          description: Array of thumbnails (in order) of the video. Can be used to show a preview of the video without video playback
+          items:
+            type: string
+        orientation:
+          $ref: '#/components/schemas/MediaFileOrientation'
+        TeamId:
+          type: string
+          format: uuid
+          nullable: true
+        UserId:
+          type: string
+          format: uuid
+          nullable: true
+        ProjectId:
+          type: string
+          format: uuid
+          nullable: true
+        ShotId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          description: When the clip was uploaded
+          example: '2021-06-17T17:23:33.714Z'
+        status:
+          $ref: '#/components/schemas/MediaFileStatus'
+        name:
+          type: string
+          nullable: true
+          description: The name of the clip. Can be set / customized.
+          example: Cinebody around the globe Final Video!
+        displayName:
+          type: string
+          description: A user-friendly display name that can be displayed to the user. This string is built from the project, user, and shot details and can be used to organize files.
+        displayNameWithExtension:
+          type: string
+          description: Same as displayName but with file extension
+        moderatedAt:
+          type: string
+          nullable: true
+          description: When this file was last moderated ("status" changed)
+          example: '2021-06-17T17:23:33.714Z'
+        editDescription:
+          type: string
+          nullable: true
+          description: The description used if this is an "edit"
+          example: Here is another final video blah blah...
+        originalFileName:
+          type: string
+          nullable: true
+          description: The original file name as uploaded
+          example: null
+        teamName:
+          type: string
+          description: The name of the team
+          example: Lumenati
+        teamProfileImages:
+          $ref: '#/components/schemas/TeamProfileImages'
+        userName:
+          type: string
+          description: The name of the user that uploaded the clip
+        userProfileImages:
+          $ref: '#/components/schemas/UserProfileImages'
+    TeamProfileImages:
+      description: The team profile images
+      type: object
+      properties:
+        profile80:
+          type: string
+          description: URL of the profile image (80x80)
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_80.jpg
+        profile80@2x:
+          type: string
+          description: URL of the profile image (160x160) to be used @2x
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_80@2x.jpg
+        profile150:
+          type: string
+          description: URL of the profile image (150x150) to be used @2x
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_150.jpg
+        profile150@2x:
+          type: string
+          description: URL of the profile image (300x300) to be used @2x
+          example: https://s3.amazonaws.com/cinebody/default-logos/L_150@2x.jpg
+    UserProfileImages:
+      type: object
+      description: The profile picture / icon of the organization
+      properties:
+        profile60:
+          type: string
+          description: URL of the profile image (60x60)
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X60.jpg
+        profile60@2x:
+          type: string
+          description: URL of the profile image (120x120) to be used @2x
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X60@2x.jpg
+        profile150:
+          type: string
+          description: URL of the profile image (150x150) to be used @2x
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150.jpg
+        profile150@2x:
+          type: string
+          description: URL of the profile image (300x300) to be used @2x
+          example: https://s3.amazonaws.com/cinebody-dev/default-profile--X150@2x.jpg
+    # Enums
+    TeamStatus:
+      type: string
+      enum:
+        - paused
+        - active
+        - will-pause
+        - will-delete
+      example: admin
+      description: >
+        Team Status:
+          * `paused` - The team is paused
+          * `active` - The team is active
+          * `will-pause` - The team will be paused
+          * `will-delete` - The team will be deleted
+    UserType:
+      type: string
+      enum:
+        - regular
+        - admin
+      example: admin
+      description: >
+        User Type:
+         * `regular` - A user with regular permissions
+         * `admin` - An admin
+    UserStatus:
+      type: string
+      enum:
+        - active
+        - pending
+      example: active
+      description: >
+        User Status:
+         * `active` - The user is active
+         * `pending` - The user has been invited
+    UserOnlineStatus:
+      type: string
+      example: online
+      enum: [online, offline]
+      description: >
+        User Online Status:
+         * `online` - The user is actively using the Cinebody app
+         * `offline` - The user is offline
+    UserProjectStatus:
+      type: string
+      example: active
+      enum: [active, inactive]
+      description: >
+        Available only when a project is specified
+
+        User Project Status:
+         * `active` - The user is on the project
+         * `inactive` - The user has been blocked from contributing to the project
+    OrganizationStatus:
+      type: string
+      enum: [active, freeTrialExpired, delinquent, inactive]
+      example: active
+      description: >
+        Organization Status:
+         * `active` - The organization is currently active
+         * `freeTrialExpired` - The organization's free trial has expired
+         * `delinquent` - The organization's last billing attempt failed
+         * `inactive` - The organization does not have an active subscription
+    OrganizationStorageStatus:
+      type: string
+      enum: [compliant, grace, locked]
+      example: compliant
+      description: >
+        Storage Status:
+         * `compliant` - The organization is in compliance with storage limits
+         * `grace` - The organization is over their storage limit and using their grace storage
+         * `locked` - The organization is over their storage limit and grace storage. Uploads are no longer possible
+    ProjectType:
+      type: string
+      enum:
+        - private
+        - public
+      example: public
+      description: >
+        Publish Status
+         * `public` - The project is public and can be joined
+         * `private` - The project is private and users must be added by admins
+    ProjectStatus:
+      type: string
+      enum:
+        - inactive
+        - active
+        - archived
+        - upcoming
+      example: active
+      description: >
+        Publish Status
+         * `active` - The project is active and accepting clips
+         * `inactive` - The project is not active
+         * `upcoming` - The project has not yet started
+         * `archived` - The project has been archived and is inactive
+    ProjectPublishStatus:
+      type: string
+      enum: [unpublished, published, 'publishAll']
+      example: publishAll
+      description: >
+        Publish Status
+         * `unpublished` - Clips are hidden from project users regardless of MediaFileStatus
+         * `published` - Allow project users to view all approved clips
+         * `publishAll` - Allow project users to view all clips that have not been rejected
+    ProjectOrientation:
+      type: string
+      enum: [landscape, portrait]
+      example: landscape
+      description: >
+        Project Orientation
+         * `landscape` - The project should be filmed in landscape mode
+         * `portrait` - The project should be filmed in portrait mode
+    ProjectImageOrientation:
+      type: string
+      enum:
+        - landscapeLeft
+        - landscapeRight
+        - portrait
+        - upsideDown
+        - landscape
+        - portraitNoRotate
+      example: landscapeLeft
+      description: The direction of the project image.
+    MediaFileOrientation:
+      type: string
+      enum:
+        - landscapeLeft
+        - landscapeRight
+        - portrait
+        - upsideDown
+        - landscape
+        - portraitNoRotate
+      example: landscapeLeft
+      description: The direction of the media file
+    FilterUserType:
+      type: string
+      enum: [all, admin, teamAdmin]
+      example: compliant
+      description: >
+        Filter Users By:
+         * `all` - All organization and team admins
+         * `admin` - Organization admins only
+         * `teamAdmin` - Team admins only
+    MediaFileFps:
+      type: number
+      enum:
+        - 18
+        - 24
+        - 25
+        - 30
+        - 60
+        - 120
+        - 240
+      example: 30
+      description: >
+        The FPS for a MediaFile
+    MediaFileQuality:
+      type: string
+      enum:
+        - 720
+        - 1080
+        - 4k
+      example: 1080
+      description: >
+        The video quality
+    MediaFileVideoType:
+      type: string
+      enum:
+        - full
+        - sd
+      example: full
+      description: >
+        Video Type:
+         * `full` - The full, original video unaltered in it's original format
+         * `sd` - Standard definition. This video is transcoded for better streaming playback and is lower quality.
+    MediaFileStatus:
+      type: string
+      enum:
+        - pending
+        - approved
+        - rejected
+      example: approved
+      description: >
+        Video Type:
+         * `pending` - The video has not been moderated
+         * `approved` - An admin has reviewed this video and approved it
+         * `rejected` - An admin has reviewed this video and rejected it
+    ProjectsSortBy:
+      type: string
+      enum: [title, orientation, startAt, endAt]
+      example: startAt
+    TeamsSortBy:
+      type: string
+      enum: [name, status]
+      example: name
+    UsersSortBy:
+      type: string
+      enum: [firstName, lastName]
+      example: firstName
+    SortOrder:
+      type: string
+      enum: [asc, desc]
+      example: asc
+    # Attributes
+    OrganizationAttribute:
+      type: string
+      enum:
+        - id
+        - status
+        - storageStatus
+        - name
+        - profileImages
+        - heroImages
+        - isBilledOffline
+        - storageChecked
+        - customerId
+        - addressName
+        - addressLine1
+        - addressLine2
+        - addressCity
+        - addressState
+        - addressZip
+        - addressCountry
+        - lockedClipsAt
+        - endFreeTrialAt
+        - shouldAutoUpgrade
+        - isLocked
+    UserAttribute:
+      type: string
+      enum:
+        - id
+        - firstName
+        - name
+        - profileImages
+        - userBio
+        - lastName
+        - email
+        - status
+        - profileImages
+        - onlineStatus
+    TeamAttribute:
+      type: string
+      enum:
+        - id
+        - name
+        - profileImages
+        - status
+        - awsFolderName
+        - heroImageUUID
+        - heroImages
+        - slug
+        - pagePublished
+        - OrganizationId
+        - description
+        - userCounts
+        - teamClipCount
+        - hasAnIncentive
+    ProjectAttribute:
+      type: string
+      enum:
+        - id
+        - title
+        - description
+        - orientation
+        - shootType
+        - defaultImageUrl
+        - profileImageUUID
+        - profileImages
+        - defaultImageOrientation
+        - defaultImageIcon
+        - publishStatus
+        - type
+        - joinCode
+        - TeamId
+        - OrganizationId
+        - createdAt
+        - updatedAt
+        - teaserFileSize
+        - teaserFileSizeSD
+        - teaserThumbSize
+        - teaserTranscoded
+        - teaserTranscodingError
+        - teaserFileUUID
+        - teaserFileUUIDSD
+        - teaserLengthSeconds
+        - teaserUrl
+        - teaserThumbnails
+        - incentive
+        - userCounts
+        - mediaCounts
+        - startAt
+        - endAt
+        - status
+        - newStatus
+        - isGeoVisible
+    # Errors
+    ErrorBadRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Will be set to 'failure'
+          example: failure
+        code:
+          type: string
+          description: The error code. Use this code to identify the specific error.
+          example: NO_USER_SLOTS
+        reason:
+          type: string
+          description: An error description for developers
+          example: There are no more slots open on the team.  The admin must remove users or upgrade the package.
+        friendlyReason:
+          type: string
+          description: An end-user friendly message
+          example: You've run out of user spots.  Delete users or upgrade your package.
+    ErrorNotAuthorized:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Will be set to 'failure'
+          example: failure
+        code:
+          type: string
+          description: The error code. Use this code to identify the specific error.
+          example: APP_NOT_AUTHORIZED
+        reason:
+          type: string
+          description: An error description for developers
+          example: The app does not have permission to access that resource.
+        friendlyReason:
+          type: string
+          description: An end-user friendly message
+          example: Sorry, something went wrong. Please try again later.
+    ErrorMissingParameters:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Will be set to 'failure'
+          example: failure
+        code:
+          type: string
+          description: The error code. Use this code to identify the specific error.
+          example: MISSING_PARAMETERS
+        reason:
+          type: string
+          description: An error description for developers
+          example: The request parameters are missing something that is required
+        friendlyReason:
+          type: string
+          description: An end-user friendly message
+          example: Sorry, something went wrong. Please try again later.
+    ErrorNotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Will be set to 'failure'
+          example: failure
+        code:
+          type: string
+          description: The error code. Use this code to identify the specific error.
+          example: ORGANIZATION_NOT_FOUND
+        reason:
+          type: string
+          description: An error description for developers
+          example: The organization was not found
+        friendlyReason:
+          type: string
+          description: An end-user friendly message
+          example: Sorry, something went wrong. Please try again later.
+    ErrorServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Will be set to 'failure'
+          example: failure
+        code:
+          type: string
+          description: The error code. Use this code to identify the specific error.
+          example: SERVER_ERROR
+        reason:
+          type: string
+          description: An error description for developers
+          example: An unknown error occurred in the API.
+        friendlyReason:
+          type: string
+          description: An end-user friendly message
+          example: Something went wrong here. Please try again.
+    APIVersion:
+      type: object
+      properties:
+          apiVersion:
+            type: string
+            description: The current api version
+            example: 3.26.1
+  parameters:
+    limit:
+      name: limit
+      description: Limit the number of items returned
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 10
+        format: int32
+    page:
+      name: page
+      description: The page of results to fetch. The first page is 0
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 10
+        format: int32
+    organizationAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/OrganizationAttribute'
+    teamAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/TeamAttribute'
+    projectAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ProjectAttribute'
+    userAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/UserAttribute'
+  responses:
+    400:
+      description: A bad request was made. Check the error code and parameters sent.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorBadRequest'
+    403:
+      description: The app is not authorized to perform that action.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorNotAuthorized'
+    404:
+      description: The resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorNotFound'
+    406:
+      description: The request is missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMissingParameters'
+    418:
+      description: I'm a teapot
+      content:
+        application/json:
+          schema:
+            properties:
+              isATeapot:
+                type: boolean
+                example: true
+                description: Denotes whether I am in fact a teapot
+    500:
+      description: The server encountered an unspecified error. This is a catch-all error. Check your request and parameters are valid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorServerError'
+  securitySchemes:
+    APIKey:
+      type: apiKey
+      name: x-api-key
+      in: header
