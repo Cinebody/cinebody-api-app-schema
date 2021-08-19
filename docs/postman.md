@@ -1,12 +1,12 @@
-(Cinebody)[https://www.cinebody.com] is the video production platform for every organization.
+[Cinebody](https://www.cinebody.com) is the video production platform for every organization.
 
-Check out the platform with a (Free Trial)[https://pro.cinebody.com/checkout/trial]
+Check out the platform with a [Free Trial](https://pro.cinebody.com/checkout/trial)
 
-If you have needs that require API access, **get in touch about our (Enterprise Plans)[https://www.cinebody.com/enterprise-scheduling]** or email (support@cinebody.com)[mailto:support@cinebody.com].
+If you have needs that require API access, **get in touch about our [Enterprise Plans](https://www.cinebody.com/enterprise-scheduling)** or email [support@cinebody.com](mailto:support@cinebody.com).
 
 # API Status
 
-See the latest api status: (https://status.cinebody.com/)[https://status.cinebody.com/]
+See the latest api status: [https://status.cinebody.com/](https://status.cinebody.com/)
 
 # Requirements
 
@@ -30,15 +30,15 @@ Every request you make should include the `x-api-key` header where the value is 
   * A team has many projects.
 * Project
   * A project is like a campaign with a start and end. Creators join your project and upload footage. Your team admins then review that content
-* User (aka Creator)
+* User [aka Creator]
   * A user might belong to many organizations, teams, and/or projects with various roles
-* MediaFile (aka Video or Clip)
+* MediaFile [aka Video or Clip]
   * Clip
     * A clip is a video that is uploaded to a project
   * Final Video
     * A final video is an edited video that team admins may upload to a project and then optionally share to Creators
 * Notification
-  * A notification can be sent to Creators on a team or project. Notifications will show in the Cinebody App and as a push notification (if enabled by the user)
+  * A notification can be sent to Creators on a team or project. Notifications will show in the Cinebody App and as a push notification [if enabled by the user]
 
 # User Roles
 
@@ -56,16 +56,16 @@ Users can have various roles within different organizations, teams, or projects.
 
 # Rate Limits / Throttling
 
-We employ rate limiting of api requests but do not publish specific limits. If you're encountering rate limiting issues and need higher limits please contact us at (support@cinebody.com)[support@cinebody.com]
+We employ rate limiting of api requests but do not publish specific limits. If you're encountering rate limiting issues and need higher limits please contact us at [support@cinebody.com][support@cinebody.com]
 
 # Errors
 
 Error responses from the api will have:
 
-`status` - Will always be 'failure'
-`code` - An error code in UPPER_SNAKE_CASE. Use this code to check for specific errors.
-`reason` - A debug message meant for developers
-`friendlyReason` - An end-user friendly error message that can be displayed
+* `status` - Will always be 'failure'
+* `code` - An error code in UPPER_SNAKE_CASE. Use this code to check for specific errors.
+* `reason` - A debug message meant for developers
+* `friendlyReason` - An end-user friendly error message that can be displayed
 
 For example:
 
@@ -86,6 +86,7 @@ For example:
 * `404` - The item that was requested couldn't be found.
 * `406` - Generally missing or invalid parameters
 * `410` - Deprecated endpoint
+* `418` - [I'm a teapot](https://datatracker.ietf.org/doc/html/rfc2324#section-2.3.2)
 * `420/429` - You've been rate-limited. Enhance your calm
 * `500` - Catch-all error. Check the format of your parameters / request.
 
