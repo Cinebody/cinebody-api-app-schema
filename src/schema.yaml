@@ -2152,6 +2152,235 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+  /app/3.0/notifications:
+    post:
+      tags:
+        - Notications
+      summary: Create a notification
+      parameters:
+        - $ref: '#/components/parameters/scheduledNotificationAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+                - type
+                - teamId
+              properties:
+                message:
+                  type:  string
+                  description: The notification text
+                  example: Start getting some footage!
+                teamId:
+                  type:  string
+                  format: uuid
+                  description: The team id to send the notification to
+                projectId:
+                  type:  string
+                  format: uuid
+                  nullable: true
+                  description: The project id to send the notification to. Omit this paramter to send to all projects under the team
+                userId:
+                  type:  string
+                  format: uuid
+                  nullable: true
+                  description: The user id to send the message to. When this parameter is set, the type should be "individualMessage"
+                mediaFileId:
+                  type:  string
+                  format: uuid
+                  nullable: true
+                  description: If this message relates to a Final Video, set the mediaFileId
+                isFromTeam:
+                  type:  boolean
+                  nullable: true
+                  description: IGNORED. For api apps, isFromTeam will always be true
+                  example: true
+                type:
+                  $ref: '#/components/schemas/NotificationType'
+                sendAt:
+                  type: string
+                  nullable: true
+                  description: When to send the message. Send immediately if null or not set
+                  example: '2020-10-03T00:00:00.000Z'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      scheduledNotification:
+                        $ref: '#/components/schemas/ScheduledNotification'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/scheduledNotifications:
+    get:
+      tags:
+        - Notications
+      summary: Get schedule notifications
+      parameters:
+        - name: teamId
+          in: query
+          schema:
+            type:  string
+            format: uuid
+            description: Filter by team
+        - name: projectId
+          in: query
+          schema:
+            type:  string
+            format: uuid
+            description: Filter by project
+        - name: fromUserId
+          in: query
+          schema:
+            type:  string
+            format: uuid
+            description: Filter by the user that sent the message
+        - name: mediaFileId
+          in: query
+          schema:
+            type:  string
+            format: uuid
+            description: Filter by video
+        - name: isFromTeam
+          in: query
+          schema:
+            type:  boolean
+            description: Filter by whether notification came from team
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/NotificationType'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/NotificationStatus'
+        - name: sortOrder
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - $ref: '#/components/parameters/scheduledNotificationAttributes'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      scheduledNotification:
+                        $ref: '#/components/schemas/ScheduledNotification'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+  /app/3.0/scheduledNotifications/{scheduledNotificationId}:
+    patch:
+      tags:
+        - Notications
+      summary: Update a notification
+      parameters:
+        - name: scheduledNotificationId
+          in: path
+          description: The notification to update
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/scheduledNotificationAttributes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type:  string
+                  description: The notification text
+                  example: Start getting some footage!
+                sendAt:
+                  type: string
+                  nullable: true
+                  description: When to send the message. Send immediately if null or not set
+                  example: '2020-10-03T00:00:00.000Z'
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      scheduledNotification:
+                        $ref: '#/components/schemas/ScheduledNotification'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Notications
+      summary: Delete a notification
+      parameters:
+        - name: scheduledNotificationId
+          in: path
+          description: The notification to update
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
 components:
   schemas:
     Address:
@@ -2941,6 +3170,67 @@ components:
           description: The number of users on the project
         userClipCounts:
           $ref: '#/components/schemas/ProjectUserClipCount'
+    ScheduledNotification:
+      type: object
+      description: A scheduled notification
+      properties:
+        id:
+          type: string
+          format: uuid
+        emailMessage:
+          type: string
+          description: 'DEPRECATED: Use pushMessage'
+          nullable: true
+        pushMessage:
+          type: string
+          nullable: true
+          example: Start capturing footage ASAP!
+        read:
+          type: boolean
+          description: Whether the message has been seen by the user
+          example: false
+        isFromTeam:
+          type: string
+          description: If this notification is coming from the team (and not an individual user)
+        type:
+          $ref: '#/components/schemas/NotificationType'
+        sendAt:
+          type: string
+          description: When to send the message. Send immediately if null
+          nullable: true
+          example: '2020-10-03T00:00:00.000Z'
+        status:
+          $ref: '#/components/schemas/NotificationStatus'
+        imageUrl:
+          type: string
+          description: Image to display in the notification
+          nullable: true
+        data:
+          additionalProperties: true
+          description: Custom data for pushes
+        ProjectId:
+          type: string
+          format: uuid
+          nullable: true
+        TeamId:
+          type: string
+          format: uuid
+          nullable: true
+        FromUserId:
+          type: string
+          format: uuid
+          nullable: true
+        ToUserId:
+          type: string
+          format: uuid
+          nullable: true
+        MediaFileId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          example: '2020-08-02T00:00:00.000Z'
     # Enums
     TeamStatus:
       type: string
@@ -3145,6 +3435,38 @@ components:
       type: string
       enum: [asc, desc]
       example: asc
+    NotificationType:
+      type: string
+      enum:
+        - individualMessage
+        - message
+        - finalEdit
+        - projectActive
+        - projectCreated
+      example: approved
+      description: >
+        Notification type:
+          * `individualMessage` - A message sent to a single user
+          * `message` - A message sent to all the project users
+          * `finalEdit` - A final edit has been posted
+          * `projectActive` - A project was set to active
+          * `projectCreated` - A project was created
+    NotificationStatus:
+      type: string
+      enum:
+        - pending
+        - processing
+        - sent
+        - blocked
+        - error
+      example: approved
+      description: >
+        Notification Status:
+          * `pending` - The notification has not yet been sent
+          * `processing` - The notification send is in-progress
+          * `sent` - The notification was sent and to the best of our knowledge delivered to the user.
+          * `blocked` - The push notification was blocked by the user's preferences. The notification can still be accessed in-app
+          * `error` - Something critical went wrong with sending the message
     # Attributes
     OrganizationAttribute:
       type: string
@@ -3314,6 +3636,24 @@ components:
         - edit
         - shot
         - teaser
+    ScheduledNotificationAttribute:
+      enum:
+        - id
+        - emailMessage
+        - pushMessage
+        - read
+        - isFromTeam
+        - type
+        - sendAt
+        - status
+        - imageUrl
+        - data
+        - ProjectId
+        - TeamId
+        - FromUserId
+        - ToUserId
+        - MediaFileId
+        - createdAt
     # Errors
     ErrorBadRequest:
       type: object
@@ -3434,7 +3774,7 @@ components:
       schema:
         type: integer
         minimum: 0
-        default: 10
+        default: 0
         format: int32
     organizationAttributes:
       name: attributes
@@ -3492,6 +3832,14 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/ShotTypeAttributes'
+    scheduledNotificationAttributes:
+      name: attributes
+      in: query
+      description: Limit the response to specific attributes to reduce response size. Default is to return everything.
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ScheduledNotificationAttribute'
   responses:
     400:
       description: A bad request was made. Check the error code and parameters sent.
