@@ -1787,6 +1787,49 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+  /app/3.0/teams/{teamId}/image:
+    put:
+      tags:
+        - Teams
+      summary: Update a team profile image
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          description: The team id
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
   /app/3.0/teams/{teamId}/users/{userId}:
     delete:
       tags:
