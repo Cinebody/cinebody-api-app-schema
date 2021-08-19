@@ -3,7 +3,7 @@ info:
   title: 'Cinebody API'
   version: 'v3'
 servers:
-  - url: https://app-api.cinebody.com/
+  - url: https://app-api.cinebody.com
 security:
   - APIKey: []
 tags: []
