@@ -788,6 +788,50 @@ paths:
           $ref: '#/components/responses/406'
         '500':
           $ref: '#/components/responses/500'
+  /app/3.0/projects/{projectId}/image:
+    put:
+      tags:
+        - Projects
+      summary: Update a project image.
+      description: Updating an image is asynchronous and may take several minutes before the image is actually updated
+      parameters:
+        - name: projectId
+          required: true
+          in: path
+          description: The project id
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - success
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
   /app/3.0/getProjectCode:
     get:
       tags:
@@ -1792,6 +1836,7 @@ paths:
       tags:
         - Teams
       summary: Update a team profile image
+      description: Updating an image is asynchronous and may take several minutes before the image is actually updated
       parameters:
         - name: teamId
           required: true
