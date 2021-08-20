@@ -4,6 +4,7 @@ info:
   version: 'v3'
 servers:
   - url: https://app-api.cinebody.com
+  - url: https://stage-app-api.cinebody.com
 security:
   - APIKey: []
 tags: []
@@ -3236,7 +3237,7 @@ components:
         - finalEdit
         - projectActive
         - projectCreated
-      example: approved
+      example: message
       description: >
         Notification type:
           * `individualMessage` - A message sent to a single user
@@ -3252,7 +3253,7 @@ components:
         - sent
         - blocked
         - error
-      example: approved
+      example: pending
       description: >
         Notification Status:
           * `pending` - The notification has not yet been sent
