@@ -1,5 +1,5 @@
 # Cinebody Schema and Developer Documenation
 
-`src/schema.yaml` defines the OpenAPI spec
+`src/schema.yaml` defines the OpenAPI 3.0 spec
 
-`docs/postman.md` is markdown to include with the postman documentaion
+Visit [developer.cinebody.com](https://developer.cinebody.com) for more information
