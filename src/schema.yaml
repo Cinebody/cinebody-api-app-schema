@@ -347,11 +347,6 @@ paths:
                   example: newuser@example.com
                 type:
                   $ref: '#/components/schemas/UserType'
-              anyOf:
-                - required: [userId]
-                - required: [email]
-                - required: [userId, type]
-                - required: [email, type]
       responses:
         '200':
           description: Success
@@ -1390,11 +1385,6 @@ paths:
                   type: string
                   description: The user's email. User id must be specified if email is not.
                   example: newuser@example.com
-              anyOf:
-                - required: [userId]
-                - required: [email]
-                - required: [userId, type]
-                - required: [email, type]
       responses:
         '200':
           description: Success
@@ -1824,11 +1814,6 @@ paths:
                   example: newuser@example.com
                 type:
                   $ref: '#/components/schemas/UserType'
-              anyOf:
-                - required: [userId]
-                - required: [email]
-                - required: [userId, type]
-                - required: [email, type]
       responses:
         '200':
           description: Success
