@@ -2686,19 +2686,24 @@ components:
         contentType:
           type: string
           description: The MIME content type of the file
+          example: video/mp4
         fileSize:
           type:  number
           description: The size of the original file in bytes
+          example: 3700104
         fileSizeSD:
           type:  number
-          description: The size of the transcoded, standard definition file in bytes
+          description: The size of the transcoded, standard definition file in bytes,
+          example: 1988304
         thumbSize:
           type:  number
           description: The total size of thumbnail assets in bytes
+          example: 45000
         lengthSeconds:
           type: number
           nullable: true
           description: The video file length in seconds
+          example: 21
         description:
           type: string
           nullable: true
@@ -2706,15 +2711,19 @@ components:
         isEdit:
           type: boolean
           description: Whether this media file is an "edit"
+          example: false
         transcoded:
           type: boolean
           description: Whether an SD version has been transcoded
+          example: true
         transcodingError:
           type: boolean
           description: Whether there was an error transcoding the SD version
+          example: false
         shotInCaseMode:
           type: boolean
           description: Legacy. Whether this was shot in a cinebody case
+          example: false
         fps:
           $ref: '#/components/schemas/MediaFileFps'
           nullable: true
@@ -3461,6 +3470,7 @@ components:
         - edit
         - shot
         - teaser
+      example: clip
     ScheduledNotificationAttribute:
       enum:
         - id
