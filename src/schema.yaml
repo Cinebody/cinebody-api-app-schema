@@ -468,6 +468,7 @@ paths:
             type: array
             items:
               type: string
+              example: 12345678-90ab-cdef-1234-567890abcdef
           description: Limit results to these teams
         - $ref: '#/components/parameters/projectAttributes'
         - $ref: '#/components/parameters/limit'
@@ -539,6 +540,7 @@ paths:
                 shootType:
                   type: string
                   description: Describes the theme of the project. Event, Micro-doc, Sports, etc.
+                  example: event
                 type:
                   $ref: '#/components/schemas/ProjectType'
                 incentive:
@@ -1067,21 +1069,25 @@ paths:
             type: string
           in: query
           description: The video content/mime type
+          example: video/mp4
         - name: ext
           schema:
             type: string
           in: query
           description: The file extension to use
+          example: mp4
         - name: type
           schema:
             $ref: '#/components/schemas/ProjectUploadType'
           in: query
           description: The type of video
+          example: clip
         - name: sizeBytes
           schema:
             type: number
           in: query
           description: The size of the file in bytes
+          example: 1234567
       responses:
         '200':
           description: Success
@@ -1127,6 +1133,7 @@ paths:
                 filename:
                   description: The filename obtained from the response of the Get Upload Url request
                   type: string
+                  example: b7f4b91b-22fd-4e37-8502-e85baeeebe5f.mp4
                 originalFileName:
                   type: string
                   description: The original filename
@@ -1144,8 +1151,10 @@ paths:
                         type: number
                       etag:
                         type: string
+                  example: [{"partNumber": 1, "etag": "ac558a124f2523864ec4d8cf941b235c"}]
                 uploadId:
                   type: string
+                  example: rtKJLL8wPmShp9CqiyW4KxY971661AFADLJE30uwnHgYuDwoGXge1gi_cF7miTYOSaUu3Np2jRieoG5QKDIJklWJGWhqazhygktymnZjD4uFiyuhqYbu4CIBRR5NXVR2
                 duration:
                   type: number
                   description: The duration of the clip in seconds
@@ -1177,6 +1186,10 @@ paths:
                   type: number
                   description: The longitude where the clip was filmed
                   example: 12.454628
+                userId:
+                  type: string
+                  description: The user to associate this clip to. As if they uploaded it themself.
+                  example: 12345678-90ab-cdef-1234-567890abcdef
       responses:
         '200':
           description: Success
@@ -1194,7 +1207,7 @@ paths:
     post:
       tags:
         - Uploads
-      summary: Completes a multipart clip upload for a shot example video
+      summary: Completes a shot example video upload
       parameters:
         - name: projectId
           in: path
@@ -1213,12 +1226,28 @@ paths:
                 filename:
                   description: The filename obtained from the response of the Get Upload Url request
                   type: string
+                  example: b7f4b91b-22fd-4e37-8502-e85baeeebe5f.mp4
                 shotId:
                   type: string
                   description: The shot id to associate with the clip
+                  example: 12345678-90ab-cdef-1234-567890abcdef
                 hasNoPadding:
                   type: boolean
                   description: Whether this example clips should not be padded
+                  example: false
+                parts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      partNumber:
+                        type: number
+                      etag:
+                        type: string
+                  example: [{"partNumber": 1, "etag": "ac558a124f2523864ec4d8cf941b235c"}]
+                uploadId:
+                  type: string
+                  example: rtKJLL8wPmShp9CqiyW4KxY971661AFADLJE30uwnHgYuDwoGXge1gi_cF7miTYOSaUu3Np2jRieoG5QKDIJklWJGWhqazhygktymnZjD4uFiyuhqYbu4CIBRR5NXVR2
       responses:
         '200':
           description: Success
@@ -1236,7 +1265,7 @@ paths:
     post:
       tags:
         - Uploads
-      summary: Completes a multipart clip upload for a project teaser video
+      summary: Completes a project teaser video upload
       parameters:
         - name: projectId
           in: path
@@ -1255,6 +1284,20 @@ paths:
                 filename:
                   description: The filename obtained from the response of the Get Upload Url request
                   type: string
+                  example: b7f4b91b-22fd-4e37-8502-e85baeeebe5f.mp4
+                parts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      partNumber:
+                        type: number
+                      etag:
+                        type: string
+                  example: [{"partNumber": 1, "etag": "ac558a124f2523864ec4d8cf941b235c"}]
+                uploadId:
+                  type: string
+                  example: rtKJLL8wPmShp9CqiyW4KxY971661AFADLJE30uwnHgYuDwoGXge1gi_cF7miTYOSaUu3Np2jRieoG5QKDIJklWJGWhqazhygktymnZjD4uFiyuhqYbu4CIBRR5NXVR2
       responses:
         '200':
           description: Success
