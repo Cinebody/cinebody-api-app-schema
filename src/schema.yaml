@@ -546,7 +546,7 @@ paths:
                 incentive:
                   type: string
                   description: The project incentive
-                  example: Free t-shirt for selected creators
+                  example: Free t-shirt for selected filmers
                 status:
                   $ref: '#/components/schemas/ProjectStatus'
                 publishStatus:
@@ -644,7 +644,7 @@ paths:
                 incentive:
                   type: string
                   description: The project incentive
-                  example: Free t-shirt for selected creators
+                  example: Free t-shirt for selected filmers
                 status:
                   $ref: '#/components/schemas/ProjectStatus'
                 publishStatus:
@@ -1158,6 +1158,7 @@ paths:
                 duration:
                   type: number
                   description: The duration of the clip in seconds
+                  example: 123456
                 shotInCaseMode:
                   type: boolean
                   description: Legacy Super 8 case-mode support
@@ -1165,9 +1166,11 @@ paths:
                 shotId:
                   type: string
                   description: The shot id to associate with the clip
+                  example: 12345678-90ab-cdef-1234-567890abcdef
                 isEdit:
                   type: boolean
                   description: If this clip is an edit
+                  example: false
                 fps:
                   $ref: '#/components/schemas/MediaFileFps'
                 quality:
@@ -2426,7 +2429,7 @@ components:
           nullable: true
         name:
           type: string
-          description: A friendly name for the user. This value will always be a string. If the user has not set a name it will default to Creator
+          description: A friendly name for the user. This value will always be a string. If the user has not set a name it will default to Filmer
         email:
           type: string
           description: The user's email address
@@ -2684,7 +2687,7 @@ components:
           type:  string
           nullable: true
           description: Incentive for filming
-          example: Free t-shirt for selected creators
+          example: Free t-shirt for selected filmers
         userCounts:
           $ref: '#/components/schemas/ProjectUserCounts'
         mediaCounts:
