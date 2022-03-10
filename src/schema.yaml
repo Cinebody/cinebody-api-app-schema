@@ -1051,6 +1051,33 @@ paths:
                         enum:
                           - success
 
+  /app/3.0/project:
+    get:
+      tags:
+        - Projects
+      summary: Find a project
+      description: Find a project by joinCode
+      parameters:
+        - name: joinCode
+          required: true
+          in: query
+          description: The join code
+          schema:
+            type: string
+            example: abc123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/APIVersion'
+                  - type: object
+                    properties:
+                      project:
+                        $ref: '#/components/schemas/Project'
+
   /app/3.0/projects/{projectId}/upload:
     get:
       tags:
