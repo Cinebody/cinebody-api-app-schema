@@ -2370,6 +2370,25 @@ components:
               type: boolean
               description: The organization is locked out because of a subscription status issue
               example: false
+            features:
+              type: object
+              description: The features that are enabled or disabled for the organization
+              properties:
+                isChatDisabled:
+                  required: false
+                  type: boolean
+                  description: Whether chat is disabled
+                  example: false
+                isLegalEnabled:
+                  required: false
+                  type: boolean
+                  description: Whether custom legal is enabled
+                  example: false
+                isImageMediaEnabled:
+                  required: false
+                  type: boolean
+                  description: Whether photo upload is enabled
+                  example: false
     Team:
       description: A team
       type: object
